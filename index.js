@@ -4,6 +4,7 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 const app = express();
@@ -12,6 +13,9 @@ const saltRounds = 10;
 const JWT_SECRET =
   process.env.JWT_SECRET ||
   "sKj9eFv6HrM3#Lq2vP@wTuKz8WxJfTgXzLm4cBzFv1Q!xShD5V2Tb7z*9K7UoYn";
+const ai = new GoogleGenAI({
+  apiKey: "AIzaSyBaGBo7Sh8eaXWX1NjI2qZi7xc-DKlOwi4",
+});
 
 app.use(cors());
 app.use(express.json());
@@ -146,6 +150,27 @@ app.post("/addblog", (req, res) => {
       res.status(201).json({ message: "Blog Added to database" });
     }
   );
+});
+
+app.post("/chatwithgemini", async (req, res) => {
+  const userInput = req.body.text;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: `Please enhance the following text in the most beautiful way it can be written:
+
+      ${userInput}`,
+    });
+
+    // The response from Gemini will be directly in an enhanced list format
+    res.json({ enhancedText: response.text });
+  } catch (error) {
+    console.error("Error occurred while querying Gemini:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing your request." });
+  }
 });
 
 app.listen(port, () => {
