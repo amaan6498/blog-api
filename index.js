@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,12 +15,11 @@ const JWT_SECRET =
   process.env.JWT_SECRET ||
   "sKj9eFv6HrM3#Lq2vP@wTuKz8WxJfTgXzLm4cBzFv1Q!xShD5V2Tb7z*9K7UoYn";
 const ai = new GoogleGenAI({
-  apiKey: "AIzaSyBaGBo7Sh8eaXWX1NjI2qZi7xc-DKlOwi4",
+  apiKey: process.env.API_KEY,
 });
 
 app.use(cors());
 app.use(express.json());
-dotenv.config();
 
 // PostgreSQL setup
 const db = new pg.Client({
