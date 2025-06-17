@@ -11,9 +11,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 const saltRounds = 10;
-const JWT_SECRET =
-  process.env.JWT_SECRET ||
-  "sKj9eFv6HrM3#Lq2vP@wTuKz8WxJfTgXzLm4cBzFv1Q!xShD5V2Tb7z*9K7UoYn";
+const JWT_SECRET = process.env.JWT_SECRET;
 const ai = new GoogleGenAI({
   apiKey: process.env.API_KEY,
 });
